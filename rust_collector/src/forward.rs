@@ -1,18 +1,22 @@
 use anyhow::Result;
+use std::fs::{self, OpenOptions};
+use std::io::Write;
 use tracing::info;
 
 use crate::model::NormalizedTelemetry;
 
 pub async fn forward_to_python(sample: &NormalizedTelemetry) -> Result<()> {
-    // Placeholder implementation.
-    // Next step could be:
-    // - append JSONL to a file
-    // - POST to a Python HTTP endpoint
-    // - send via socket
-    // - publish to a channel
-
     let json = serde_json::to_string(sample)?;
     info!(payload = %json, "forwarded telemetry");
+
+    fs::create_dir_all("../sample_data")?;
+
+    let mut file = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open("../sample_data/normalized_telemetry.jsonl")?;
+
+    writeln!(file, "{}", json)?;
 
     Ok(())
 }
