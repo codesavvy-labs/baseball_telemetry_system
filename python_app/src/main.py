@@ -12,8 +12,8 @@ class TelemetryStats:
         self.spin_sum = 0.0
         self.warnings = 0
         self.errors = 0
-        self.min_velocity = 0.0
-        self.max_velocity = 0.0
+        self.min_velocity = float("inf")
+        self.max_velocity = float("-inf")   
 
     def update(self, sample):
         self.count += 1
@@ -45,9 +45,7 @@ class TelemetryStats:
         print(f"Max Velocity: {self.max_velocity:.2f}")
         print(f"Warnings: {self.warnings}")
         print(f"Errors: {self.errors}")
-        self.min_velocity = float("inf")
-        self.max_velocity = float("-inf")   
-
+ 
 def process_sample(sample, stats):
     stats.update(sample)
 
@@ -90,9 +88,9 @@ def tail_file(path: Path, stats):
 def main():
     print("Python telemetry consumer starting...")
     stats = TelemetryStats() 
-    print(DATA_FILE)   
+    print(f"Telemetry file: {DATA_FILE}")
+    print(f"Exists: {DATA_FILE.exists()}")
     tail_file(DATA_FILE,stats)
-
 
 if __name__ == "__main__":
     main()
