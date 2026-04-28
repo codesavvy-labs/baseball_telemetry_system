@@ -8,8 +8,8 @@ DATA_FILE = BASE_DIR.parent.parent / "sample_data" / "normalized_telemetry.jsonl
 class TelemetryStats:
     def __init__(self) :
         self.count = 0
-        self.velocity_sum = 0
-        self.spin_sum = 0
+        self.velocity_sum = 0.0
+        self.spin_sum = 0.0
         self.warnings = 0
         self.errors = 0
 
@@ -20,6 +20,9 @@ class TelemetryStats:
 
         status = sample["device_status"]
 
+        self.min_velocity = min(self.min_velocity, sample["pitch_velocity_mph"])
+        self.max_velocity = max(self.max_velocity, sample["pitch_velocity_mph"])
+        
         if status == "warning":
             self.warnings += 1
         elif status == "error":
@@ -36,9 +39,12 @@ class TelemetryStats:
         print(f"Samples: {self.count}")
         print(f"Avg Velocity: {avg_velocity:.2f}")
         print(f"Avg Spin: {avg_spin:.2f}")
+        print(f"Min Velocity: {self.min_velocity:.2f}")
+        print(f"Max Velocity: {self.max_velocity:.2f}")
         print(f"Warnings: {self.warnings}")
         print(f"Errors: {self.errors}")
-    
+        self.min_velocity = float("inf")
+        self.max_velocity = float("-inf")   
 
 def process_sample(sample, stats):
     stats.update(sample)
@@ -49,7 +55,8 @@ def process_sample(sample, stats):
         f"spin={sample['spin_rate_rpm']}"
     )
 
-    stats.report()
+    if stats.count % 5 == 0:
+        stats.report()
 
 def tail_file(path: Path, stats):
     while not path.exists():
