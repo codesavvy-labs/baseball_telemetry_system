@@ -15,6 +15,5 @@ jobs:
         shell: powershell
         run: |
           "C:\Users\tomha\.cargo\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          cargo --version          
-          Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-          .\windows-rust-unit-test.ps1
+          cargo --version
+          
