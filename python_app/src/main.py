@@ -89,7 +89,8 @@ def tail_file(path: Path, stats):
 
 def main():
     print("Python telemetry consumer starting...")
-    stats = TelemetryStats()    
+    stats = TelemetryStats() 
+    print(DATA_FILE)   
     tail_file(DATA_FILE,stats)
 
 
