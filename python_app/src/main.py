@@ -12,6 +12,8 @@ class TelemetryStats:
         self.spin_sum = 0.0
         self.warnings = 0
         self.errors = 0
+        self.min_velocity = 0.0
+        self.max_velocity = 0.0
 
     def update(self, sample):
         self.count += 1
