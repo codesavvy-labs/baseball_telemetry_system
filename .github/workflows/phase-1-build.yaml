@@ -14,5 +14,11 @@ jobs:
       - name: Verify Cargo
         shell: powershell
         run: |
+          git --version
+          python --version
           cargo --version
-          rustc --version        
+          rustc --version
+          cmake --version
+          clang --version
+          ninja -- version
+                
