@@ -23,7 +23,7 @@ jobs:
           ninja --version
 jobs:
   build:
-    runs-on: [self-hosted, Linux, x64]
+    runs-on: [self-hosted, Linux, X64]
 
     steps:
       - uses: actions/checkout@v4
