@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build_on_win11:
     runs-on: [self-hosted, Windows, x64]
 
     steps:
@@ -21,8 +21,8 @@ jobs:
           cmake --version
           clang --version
           ninja --version
-jobs:
-  build:
+
+  build_on_linux:
     runs-on: [self-hosted, Linux, X64]
 
     steps:
