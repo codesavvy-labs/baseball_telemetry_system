@@ -20,5 +20,4 @@ jobs:
           rustc --version
           cmake --version
           clang --version
-          ninja -- version
-                
+          ninja --version
