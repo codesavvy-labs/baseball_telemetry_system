@@ -46,8 +46,12 @@ jobs:
           ninja --version
 
       - name: Run Python tests
-        run: pytest
+        run: |
+          cd python_app
+          pytest
 
       - name: Run Rust tests
-        run: cargo test
+        run: |
+          cd rust_collector
+          cargo test
 
