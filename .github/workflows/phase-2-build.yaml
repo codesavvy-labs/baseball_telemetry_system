@@ -2,7 +2,6 @@ name: Phase 2 - Configure Build Test
 
 on:
   push:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
