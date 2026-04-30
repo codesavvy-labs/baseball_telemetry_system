@@ -1,10 +1,12 @@
-name: Phase-1 Runner Validation
+name: Phase 2 - Configure Build Test
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  can_build_on_win11:
+  build_on_win11:
     runs-on: [self-hosted, Windows, x64]
 
     steps:
@@ -21,7 +23,19 @@ jobs:
           clang --version
           ninja --version
 
-  can_build_on_linux:
+      - name: Configure
+        shell: powershell
+        run: cmake -S . -B build -G Ninja
+
+      - name: Build
+        shell: powershell
+        run: cmake --build build
+
+      - name: Test
+        shell: powershell
+        run: ctest --test-dir build --output-on-failure
+
+  build_on_linux:
     runs-on: [self-hosted, Linux, X64]
 
     steps:
@@ -37,4 +51,16 @@ jobs:
           cmake --version
           clang --version
           ninja --version
+
+      - name: Configure
+        shell: bash
+        run: cmake -S . -B build -G Ninja
+
+      - name: Build
+        shell: bash
+        run: cmake --build build
+
+      - name: Test
+        shell: bash
+        run: ctest --test-dir build --output-on-failure
 
