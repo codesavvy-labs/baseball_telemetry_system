@@ -60,4 +60,5 @@ jobs:
 
       - name: Run Python tests
         run: |
-          .venv/bin/python -m pytest python_app/tests -v      - name: Install Python test dependencies
+          .venv/bin/python -m pytest python_app/tests -v      
+
