@@ -15,6 +15,7 @@ jobs:
         run: |
           git --version
           python --version
+          pip --version
           cargo --version
           rustc --version
           cmake --version
@@ -32,6 +33,7 @@ jobs:
         run: |
           git --version
           python3 --version
+          pip --version
           cargo --version
           rustc --version
           cmake --version
