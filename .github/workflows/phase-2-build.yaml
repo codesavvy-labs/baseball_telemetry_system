@@ -33,6 +33,12 @@ jobs:
         shell: powershell
         run: |
           python -m pytest python_app/tests -v
+
+      - name: Run Rust tests
+        shell: powershell
+        working-directory: rust_collector
+        run: cargo test --verbose
+
   
   build_on_linux:
     runs-on: [self-hosted, Linux, X64]
@@ -60,5 +66,11 @@ jobs:
 
       - name: Run Python tests
         run: |
-          .venv/bin/python -m pytest python_app/tests -v      
+          .venv/bin/python -m pytest python_app/tests -v
+
+      - name: Run Rust tests
+        working-directory: rust_collector
+        run: cargo test --verbose         
+          
+
 
