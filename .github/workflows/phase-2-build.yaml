@@ -22,17 +22,11 @@ jobs:
           clang --version
           ninja --version
 
-      - name: Configure
-        shell: powershell
-        run: cmake -S . -B build -G Ninja
+      - name: Run Python tests
+        run: pytest
 
-      - name: Build
-        shell: powershell
-        run: cmake --build build
-
-      - name: Test
-        shell: powershell
-        run: ctest --test-dir build --output-on-failure
+      - name: Run Rust tests
+        run: cargo test
 
   build_on_linux:
     runs-on: [self-hosted, Linux, X64]
@@ -51,15 +45,9 @@ jobs:
           clang --version
           ninja --version
 
-      - name: Configure
-        shell: bash
-        run: cmake -S . -B build -G Ninja
+      - name: Run Python tests
+        run: pytest
 
-      - name: Build
-        shell: bash
-        run: cmake --build build
-
-      - name: Test
-        shell: bash
-        run: ctest --test-dir build --output-on-failure
+      - name: Run Rust tests
+        run: cargo test
 
