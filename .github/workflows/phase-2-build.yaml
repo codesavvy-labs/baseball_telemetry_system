@@ -31,7 +31,7 @@ jobs:
       - name: Run Python tests
         shell: powershell
         run: |
-          python -m pytest
+          python -m pytest python_app/tests -v
   
   build_on_linux:
     runs-on: [self-hosted, Linux, X64]
@@ -52,9 +52,9 @@ jobs:
 
       - name: Install Python test dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install pytest
+          python3 -m pip install --upgrade pip
+          python3 -m pip install pytest
 
       - name: Run Python tests
         run: |
-          python -m pytest
+          python3 -m pytest python_app/tests -v
