@@ -57,6 +57,12 @@ jobs:
           cmake --version
           clang --version
           ninja --version
+          gcc --version
+          qemu-system-x86_64 --version
+          qemu-system-arm --version
+          qemu-system-aarch64 --version
+          qemu-img --version
+
 
       - name: Set up Python venv
         run: |
