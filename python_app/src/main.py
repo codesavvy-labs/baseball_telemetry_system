@@ -5,26 +5,27 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 DATA_FILE = BASE_DIR.parent.parent / "sample_data" / "normalized_telemetry.jsonl"
 
+
 class TelemetryStats:
-    def __init__(self) :
+    def __init__(self):
         self.count = 0
         self.velocity_sum = 0.0
         self.spin_sum = 0.0
         self.warnings = 0
         self.errors = 0
         self.min_velocity = float("inf")
-        self.max_velocity = float("-inf")   
+        self.max_velocity = float("-inf")
 
     def update(self, sample):
         self.count += 1
-        self.velocity_sum += sample['pitch_velocity_mph']
-        self.spin_sum += sample['spin_rate_rpm']
+        self.velocity_sum += sample["pitch_velocity_mph"]
+        self.spin_sum += sample["spin_rate_rpm"]
 
         status = sample["device_status"]
 
         self.min_velocity = min(self.min_velocity, sample["pitch_velocity_mph"])
         self.max_velocity = max(self.max_velocity, sample["pitch_velocity_mph"])
-        
+
         if status == "warning":
             self.warnings += 1
         elif status == "error":
@@ -45,7 +46,8 @@ class TelemetryStats:
         print(f"Max Velocity: {self.max_velocity:.2f}")
         print(f"Warnings: {self.warnings}")
         print(f"Errors: {self.errors}")
- 
+
+
 def process_sample(sample, stats):
     stats.update(sample)
 
@@ -57,6 +59,7 @@ def process_sample(sample, stats):
 
     if stats.count % 5 == 0:
         stats.report()
+
 
 def tail_file(path: Path, stats):
     while not path.exists():
@@ -87,10 +90,11 @@ def tail_file(path: Path, stats):
 
 def main():
     print("Python telemetry consumer starting...")
-    stats = TelemetryStats() 
+    stats = TelemetryStats()
     print(f"Telemetry file: {DATA_FILE}")
     print(f"Exists: {DATA_FILE.exists()}")
-    tail_file(DATA_FILE,stats)
+    tail_file(DATA_FILE, stats)
+
 
 if __name__ == "__main__":
     main()
