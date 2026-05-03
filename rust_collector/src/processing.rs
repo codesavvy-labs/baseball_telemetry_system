@@ -55,8 +55,6 @@ pub fn validate(sample: &IncomingTelemetry) -> Result<()> {
         "ok" | "warning" | "error" => {}
         other => bail!("invalid device_status: {}", other),
     }
-
-    Ok(())
 }
 
 #[cfg(test)]
@@ -96,7 +94,10 @@ mod tests {
         let result = validate(&sample);
 
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("source_id cannot be empty"));
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("source_id cannot be empty"));
     }
 
     #[test]

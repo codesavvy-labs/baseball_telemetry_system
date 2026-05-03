@@ -17,6 +17,4 @@ pub async fn forward_to_python(sample: &NormalizedTelemetry) -> Result<()> {
         .open("../sample_data/normalized_telemetry.jsonl")?;
 
     writeln!(file, "{}", json)?;
-
-    //Ok(())
 }
