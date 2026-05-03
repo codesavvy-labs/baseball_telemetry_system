@@ -18,5 +18,5 @@ pub async fn forward_to_python(sample: &NormalizedTelemetry) -> Result<()> {
 
     writeln!(file, "{}", json)?;
 
-    Ok(())
+    //Ok(())
 }

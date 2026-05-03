@@ -96,19 +96,17 @@ jobs:
           .venv/bin/python -m pytest python_app/tests -v
 
       - name: Rust Format Check
-        shell: powershell
         working-directory: rust_collector
         run: cargo fmt --check
         
       - name: Rust Clippy
-        shell: powershell
         working-directory: rust_collector
         run: cargo clippy --all-targets --all-features -- -D warnings
 
       - name: Run Rust tests
         working-directory: rust_collector
         run: cargo test --verbose   
-              
+
       - name: Build release
         working-directory: rust_collector
         run: cargo build --release
