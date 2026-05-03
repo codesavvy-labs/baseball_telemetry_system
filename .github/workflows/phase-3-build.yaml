@@ -74,11 +74,14 @@ jobs:
             
       - name: Configure C++
         shell: powershell
-        run: cmake -S cpp_app -B cpp_app/build -G Ninja
+        run: cmake -S cpp_app -B cpp_app/build -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Build C++
         shell: powershell
         run: cmake --build cpp_app/build --verbose
+
+      - name: C++ clang-tidy
+        run: clang-tidy cpp_app/src/main.cpp -p cpp_app/build
 
       - name: Test C++
         shell: powershell
@@ -157,11 +160,14 @@ jobs:
         run: cargo build --release
 
       - name: Configure C++
-        run: cmake -S cpp_app -B cpp_app/build -G Ninja
+        run: cmake -S cpp_app -B cpp_app/build -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Build C++
         run: cmake --build cpp_app/build --verbose
 
+      - name: C++ clang-tidy
+        run: clang-tidy cpp_app/src/main.cpp -p cpp_app/build
+        
       - name: Test C++
         run: ctest --test-dir cpp_app/build --output-on-failure
       
