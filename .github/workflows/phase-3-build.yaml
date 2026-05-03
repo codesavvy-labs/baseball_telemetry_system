@@ -1,6 +1,7 @@
-name: Phase 2 - Configure Build Test
+name: Phase 3 - Configure Build Linting
 
 on:
+  push:
   workflow_dispatch:
 
 jobs:
@@ -34,11 +35,30 @@ jobs:
         run: |
           python -m pytest python_app/tests -v
 
-      - name: Run Rust tests
+      - name: Rust Format Check
+        shell: powershell
+        working-directory: rust_collector
+        run: cargo fmt --check
+        
+      - name: Rust Clippy
+        shell: powershell
+        working-directory: rust_collector
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Rust Unit Tests
         shell: powershell
         working-directory: rust_collector
         run: cargo test --verbose
 
+      - name: Build release
+        working-directory: rust_collector
+        run: cargo build --release
+
+      - name: Upload Rust artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-binary-${{ runner.os }}
+          path: rust_collector/target/release/
   
   build_on_linux:
     runs-on: [self-hosted, Linux, X64]
@@ -75,9 +95,25 @@ jobs:
         run: |
           .venv/bin/python -m pytest python_app/tests -v
 
+      - name: Rust Format Check
+        shell: powershell
+        working-directory: rust_collector
+        run: cargo fmt --check
+        
+      - name: Rust Clippy
+        shell: powershell
+        working-directory: rust_collector
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
       - name: Run Rust tests
         working-directory: rust_collector
-        run: cargo test --verbose         
-          
+        run: cargo test --verbose   
+              
+      - name: Build release
+        working-directory: rust_collector
+        run: cargo build --release
+
+
+
 
 
