@@ -58,7 +58,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rust-binary-${{ runner.os }}
-          path: rust_collector/target/release/
+          path: |
+            rust_collector/target/release/rust_collector*
   
   build_on_linux:
     runs-on: [self-hosted, Linux, X64]
@@ -110,6 +111,14 @@ jobs:
       - name: Build release
         working-directory: rust_collector
         run: cargo build --release
+        
+      - name: Upload Rust artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-binary-${{ runner.os }}
+          path: |
+            rust_collector/target/release/rust_collector*
+ 
 
 
 
