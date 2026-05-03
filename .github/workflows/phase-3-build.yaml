@@ -71,6 +71,18 @@ jobs:
       - name: Build release
         working-directory: rust_collector
         run: cargo build --release
+            
+      - name: Configure C++
+        shell: powershell
+        run: cmake -S cpp_app -B cpp_app/build -G Ninja
+
+      - name: Build C++
+        shell: powershell
+        run: cmake --build cpp_app/build --verbose
+
+      - name: Test C++
+        shell: powershell
+        run: ctest --test-dir cpp_app/build --output-on-failure
 
       - name: Upload Rust artifact
         uses: actions/upload-artifact@v4
@@ -78,7 +90,8 @@ jobs:
           name: rust-binary-${{ runner.os }}
           path: |
             rust_collector/target/release/rust_collector*
-  
+            cpp_app/build/baseball_telemetry_cpp.exe
+
   build_on_linux:
     runs-on: [self-hosted, Linux, X64]
 
@@ -142,13 +155,23 @@ jobs:
       - name: Build release
         working-directory: rust_collector
         run: cargo build --release
-        
+
+      - name: Configure C++
+        run: cmake -S cpp_app -B cpp_app/build -G Ninja
+
+      - name: Build C++
+        run: cmake --build cpp_app/build --verbose
+
+      - name: Test C++
+        run: ctest --test-dir cpp_app/build --output-on-failure
+      
       - name: Upload Rust artifact
         uses: actions/upload-artifact@v4
         with:
           name: rust-binary-${{ runner.os }}
           path: |
             rust_collector/target/release/rust_collector*
+            cpp_app/build/baseball_telemetry_cpp       
  
 
 
