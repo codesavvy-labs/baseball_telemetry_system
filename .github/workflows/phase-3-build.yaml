@@ -24,10 +24,28 @@ jobs:
           clang-tidy --version
           ninja --version
 
+      - name: Upgrade pip
+        shell: powershell
+        run: python -m pip install --upgrade pip
+
+      - name: Install Python lint tools
+        shell: powershell
+        run: |
+          python -m pip install black ruff
+
+      - name: Python format check
+        shell: powershell
+        run: |
+          python -m black --check python_app
+
+      - name: Python lint
+        shell: powershell
+        run: |
+          python -m ruff check python_app
+          
       - name: Install Python test dependencies
         shell: powershell
         run: |
-          python -m pip install --upgrade pip
           python -m pip install pytest
 
       - name: Run Python tests
@@ -85,12 +103,25 @@ jobs:
           qemu-system-aarch64 --version
           qemu-img --version
 
-
-      - name: Set up Python venv
+      - name: Upgrade pip
         run: |
           python3 -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install pytest
+
+      - name: Install Python lint tools
+        run: |
+          .venv/bin/python -m pip install black ruff
+
+      - name: Python format check
+        run: |
+          .venv/bin/python -m black --check python_app
+
+      - name: Python lint
+        run: |
+          .venv/bin/python -m ruff check python_app
+
+      - name: Install pytest
+        run: .venv/bin/python -m pip install pytest
 
       - name: Run Python tests
         run: |
