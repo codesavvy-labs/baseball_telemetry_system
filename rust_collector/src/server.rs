@@ -65,4 +65,6 @@ async fn handle_connection(socket: TcpStream, peer_addr: SocketAddr) -> Result<(
     }
 
     info!(%peer_addr, "connection closed");
+
+    Ok(())
 }

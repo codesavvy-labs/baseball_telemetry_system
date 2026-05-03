@@ -55,6 +55,8 @@ pub fn validate(sample: &IncomingTelemetry) -> Result<()> {
         "ok" | "warning" | "error" => {}
         other => bail!("invalid device_status: {}", other),
     }
+
+    Ok(())
 }
 
 #[cfg(test)]
