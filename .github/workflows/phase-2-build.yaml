@@ -21,6 +21,7 @@ jobs:
           rustc --version
           cmake --version
           clang --version
+          clang-tidy --version
           ninja --version
 
       - name: Install Python test dependencies
@@ -56,6 +57,7 @@ jobs:
           rustc --version
           cmake --version
           clang --version
+          clang-tidy --version
           ninja --version
           gcc --version
           qemu-system-x86_64 --version
