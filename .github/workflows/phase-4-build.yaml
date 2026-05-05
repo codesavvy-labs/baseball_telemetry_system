@@ -44,6 +44,7 @@ jobs:
           python -m pytest python_app/tests
 
       - name: Rust - Format, Lint, Test
+        working-directory: rust_collector
         run: |
           cargo fmt -- --check
           cargo clippy -- -D warnings
@@ -101,12 +102,13 @@ jobs:
 
       - name: Python - Lint & Test
         run: |
-          python -m pip install black ruff pytest
-          python -m black --check python_app
-          python -m ruff check python_app
-          python -m pytest python_app/tests
+          python3 -m pip install black ruff pytest
+          python3 -m black --check python_app
+          python3 -m ruff check python_app
+          python3 -m pytest python_app/tests
 
       - name: Rust - Format, Lint, Test
+        working-directory: rust_collector     
         run: |
           cargo fmt -- --check
           cargo clippy -- -D warnings
