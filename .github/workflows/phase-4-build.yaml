@@ -118,7 +118,8 @@ jobs:
       - name: Build C++
         shell: pwsh
         run: |
-          cmd /c '"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\Tools\VsDevCmd.bat" -arch=x64 && cmake --build build/cpp --verbose' 
+          cmd /c "C:\Program Files\Microsoft Visual Studio\18\Community\Common7\Tools\VsDevCmd.bat" -arch=x64
+          cmake --build build/cpp --verbose 
           cmake -S cpp_app -B build/cpp -G Ninja
           cmake --build build/cpp
 
