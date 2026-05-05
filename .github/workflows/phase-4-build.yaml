@@ -103,10 +103,13 @@ jobs:
 
       - name: Python - Lint & Test
         run: |
-          python3 -m pip install black ruff pytest
-          python3 -m black --check python_app
-          python3 -m ruff check python_app
-          python3 -m pytest python_app/tests
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install black ruff
+          .venv/bin/python -m black --check python_app
+          .venv/bin/python -m ruff check python_app
+          .venv/bin/python -m pip install pytest
+          .venv/bin/python -m pytest python_app/tests -v
 
       - name: Rust - Format, Lint, Test
         working-directory: rust_collector     
@@ -119,8 +122,6 @@ jobs:
       - name: Build C++
         shell: pwsh
         run: |
-          cmd /c "C:\Program Files\Microsoft Visual Studio\18\Community\Common7\Tools\VsDevCmd.bat" -arch=x64
-          cmake --build build/cpp --verbose 
           cmake -S cpp_app -B build/cpp -G Ninja
           cmake --build build/cpp
 
