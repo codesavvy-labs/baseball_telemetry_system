@@ -51,8 +51,9 @@ jobs:
           cargo test
           cargo build --release
 
-      - name: C++ - Build
+      - name: C++ - Build with MSVC
         run: |
+          cmd /c '"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\Tools\VsDevCmd.bat" -arch=x64 && cmake -S cpp_app -B build/cpp -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON && cmake --build build/cpp --verbose && ctest --test-dir build/cpp --output-on-failure'
           cmake -S cpp_app -B build/cpp -G Ninja
           cmake --build build/cpp
 
