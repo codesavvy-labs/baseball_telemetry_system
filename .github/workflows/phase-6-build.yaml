@@ -110,6 +110,11 @@ jobs:
         run: |
           qemu-system-aarch64 -machine help         
 
+      - name: QEMU - Dry Run
+        shell: pwsh
+        run: |
+          qemu-system-aarch64 -machine virt -cpu cortex-a53 -nographic -serial mon:stdio -display none -S
+
       - name: Cache Python pip
         uses: actions/cache@v4
         with:
