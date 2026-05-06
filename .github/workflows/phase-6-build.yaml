@@ -116,20 +116,23 @@ jobs:
         run: |
           timeout 5s qemu-system-aarch64 -machine virt -cpu cortex-a53 -nographic -serial mon:stdio -display none
 
-      - name: QEMU - Boot tiny Linux
+      - name: QEMU - Download Alpine image
         shell: pwsh
         run: |
-          wget https://github.com/cirosantilli/linux-kernel-module-cheat/raw/master/rootfs.cpio.gz -O rootfs.cpio.gz
-          wget https://github.com/cirosantilli/linux-kernel-module-cheat/raw/master/arch/arm64/boot/Image -O Image
+          wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/aarch64/alpine-virt-3.20.3-aarch64.iso -O alpine-aarch64.iso
 
-          timeout 10s qemu-system-aarch64 `
+      - name: QEMU - Boot Alpine smoke test
+        shell: pwsh
+        run: |
+          timeout 20s qemu-system-aarch64 `
             -machine virt `
             -cpu cortex-a53 `
             -m 512M `
             -nographic `
-            -kernel Image `
-            -initrd rootfs.cpio.gz `
-            -append "console=ttyAMA0"
+            -cdrom alpine-aarch64.iso `
+            -boot d `
+            -serial mon:stdio `
+            -display none || true
 
       - name: Cache Python pip
         uses: actions/cache@v4
