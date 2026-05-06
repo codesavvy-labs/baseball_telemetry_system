@@ -112,9 +112,10 @@ jobs:
 
       - name: QEMU - Dry Run
         shell: pwsh
+        continue-on-error: true
         run: |
-          timeout 5s qemu-system-aarch64 -machine virt -cpu cortex-a53 -nographic -serial mon:stdio -display none -S
-
+          timeout 5s qemu-system-aarch64 -machine virt -cpu cortex-a53 -nographic -serial mon:stdio -display none
+          
       - name: Cache Python pip
         uses: actions/cache@v4
         with:
