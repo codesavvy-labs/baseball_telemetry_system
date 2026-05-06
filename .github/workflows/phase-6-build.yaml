@@ -123,6 +123,7 @@ jobs:
 
       - name: QEMU - Boot Alpine smoke test
         shell: pwsh
+        continue-on-error: true
         run: |
           timeout 20s qemu-system-aarch64 `
             -machine virt `
@@ -132,8 +133,8 @@ jobs:
             -cdrom alpine-aarch64.iso `
             -boot d `
             -serial mon:stdio `
-            -display none || true
-
+            -display none
+            
       - name: Cache Python pip
         uses: actions/cache@v4
         with:
