@@ -1,6 +1,7 @@
 name: Phase 3 - Configure Build Linting
 
 on:
+  push:
   workflow_dispatch:
 
 defaults:
@@ -100,6 +101,27 @@ jobs:
           qemu-system-aarch64 --version
           qemu-img --version
 
+      - name: Cache Python pip
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~\AppData\Local\pip\Cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Cache Rust
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust_collector/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('rust_collector/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+              
       - name: Python - Lint & Test
         run: |
           python3 -m venv .venv
