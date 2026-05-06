@@ -115,7 +115,22 @@ jobs:
         continue-on-error: true
         run: |
           timeout 5s qemu-system-aarch64 -machine virt -cpu cortex-a53 -nographic -serial mon:stdio -display none
-          
+
+      - name: QEMU - Boot tiny Linux
+        shell: pwsh
+        run: |
+          wget https://github.com/cirosantilli/linux-kernel-module-cheat/raw/master/rootfs.cpio.gz -O rootfs.cpio.gz
+          wget https://github.com/cirosantilli/linux-kernel-module-cheat/raw/master/arch/arm64/boot/Image -O Image
+
+          timeout 10s qemu-system-aarch64 `
+            -machine virt `
+            -cpu cortex-a53 `
+            -m 512M `
+            -nographic `
+            -kernel Image `
+            -initrd rootfs.cpio.gz `
+            -append "console=ttyAMA0"
+
       - name: Cache Python pip
         uses: actions/cache@v4
         with:
