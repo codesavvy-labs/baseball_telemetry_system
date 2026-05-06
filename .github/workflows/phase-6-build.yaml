@@ -1,6 +1,7 @@
 name: Phase 3 - Configure Build Linting
 
 on:
+  push:
   workflow_dispatch:
 
 defaults:
@@ -95,10 +96,19 @@ jobs:
           clang-tidy --version
           ninja --version
           gcc --version
+          
+      - name: QEMU - Verify
+        shell: pwsh
+        run: |
           qemu-system-x86_64 --version
           qemu-system-arm --version
           qemu-system-aarch64 --version
           qemu-img --version
+
+      - name: QEMU - List Machines
+        shell: pwsh
+        run: |
+          qemu-system-aarch64 -machine help         
 
       - name: Cache Python pip
         uses: actions/cache@v4
@@ -120,7 +130,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('rust_collector/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-              
+
       - name: Python - Lint & Test
         run: |
           python3 -m venv .venv
