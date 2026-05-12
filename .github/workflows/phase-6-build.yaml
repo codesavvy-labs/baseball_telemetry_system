@@ -96,6 +96,7 @@ jobs:
           clang-tidy --version
           ninja --version
           gcc --version
+          dot --version
           
       - name: QEMU - Verify
         shell: pwsh
@@ -134,6 +135,18 @@ jobs:
             -boot d `
             -serial mon:stdio `
             -display none
+
+      - name: Generate Rust dependency graph
+        working-directory: rust_collector
+        run: |
+            mkdir -p ../architecture/generated
+            cargo tree > ../architecture/generated/rust-cargo-tree.txt
+
+      - name: Render architecture diagrams
+        run: |
+          mkdir -p docs/architecture/generated
+          dot -Tsvg docs/architecture/source/system.dot \
+            -o docs/architecture/generated/system.svg
             
       - name: Cache Python pip
         uses: actions/cache@v4
@@ -190,8 +203,13 @@ jobs:
           name: rust-binary-${{ runner.os }}
           path: |
             rust_collector/target/release/rust_collector*
-            cpp_app/build/baseball_telemetry_cpp       
- 
+            cpp_app/build/baseball_telemetry_cpp 
+
+      - name: Upload architecture graph
+        uses: actions/upload-artifact@v4
+        with:
+          name: architecture-dependency-graph
+          path: docs/architecture/generated/ 
 
 
 

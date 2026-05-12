@@ -1,0 +1,11 @@
+digraph Architecture {
+  rankdir=LR;
+
+  "QEMU Guest" -> "Telemetry Stream";
+  "Telemetry Stream" -> "Python App";
+  "Python App" -> "Rust Collector";
+  "Rust Collector" -> "C++ Verifier";
+  "GitHub Actions" -> "Python App";
+  "GitHub Actions" -> "Rust Collector";
+  "GitHub Actions" -> "C++ Verifier";
+}
