@@ -145,8 +145,7 @@ jobs:
       - name: Render architecture diagrams
         run: |
           mkdir -p docs/architecture/generated
-          dot -Tsvg docs/architecture/source/system.dot \
-            -o docs/architecture/generated/system.svg
+          dot -Tsvg docs/architecture/source/system.dot -o docs/architecture/generated/system.svg
             
       - name: Cache Python pip
         uses: actions/cache@v4
