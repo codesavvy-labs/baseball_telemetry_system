@@ -96,7 +96,7 @@ jobs:
           clang-tidy --version
           ninja --version
           gcc --version
-          dot --version
+          dot -V
           
       - name: QEMU - Verify
         shell: pwsh
