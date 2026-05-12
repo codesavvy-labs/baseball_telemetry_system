@@ -1,0 +1,14 @@
+```mermaid
+flowchart LR
+  QEMU[QEMU Embedded Linux Guest]
+  Telemetry[Telemetry Stream]
+  Rust[Rust Collector]
+  Cpp[C++ Verifier]
+  CI[GitHub Actions CI]
+
+  QEMU --> Telemetry
+  Telemetry --> Rust
+  Rust --> Cpp
+  CI --> Rust
+  CI --> Cpp
+```
