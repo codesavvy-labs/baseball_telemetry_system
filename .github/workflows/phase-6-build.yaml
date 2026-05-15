@@ -139,8 +139,8 @@ jobs:
       - name: Generate Rust dependency graph
         working-directory: rust_collector
         run: |
-            mkdir -p ../architecture/generated
-            cargo tree > ../architecture/generated/rust-cargo-tree.txt
+            mkdir -p ../docs/architecture/generated
+            cargo tree > ../docs/architecture/generated/rust-cargo-tree.txt
 
       - name: Render architecture diagrams
         run: |
@@ -210,6 +210,11 @@ jobs:
           name: architecture-dependency-graph
           path: docs/architecture/generated/ 
 
+      - name: Upload Rust Tree
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-cargo-tree
+          path: docs/architecture/generated/ 
 
 
 
