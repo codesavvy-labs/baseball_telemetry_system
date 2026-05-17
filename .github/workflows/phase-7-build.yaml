@@ -109,6 +109,8 @@ jobs:
       - name: QEMU - Boot telemetry initramfs
         shell: pwsh
         run: |
+          New-Item -ItemType Directory -Force logs | Out-Null
+
           qemu-system-x86_64 `
             -m 512M `
             -kernel kernel/vmlinuz-6.17.0-23-generic `
@@ -117,6 +119,7 @@ jobs:
             -nographic `
             -serial file:logs/telemetry.log
 
+          Get-Content logs/telemetry.log
       - name: Generate Rust dependency graph
         working-directory: rust_collector
         run: |
