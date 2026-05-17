@@ -110,13 +110,12 @@ jobs:
         shell: pwsh
         run: |
           qemu-system-x86_64 `
-            -cpu q35 `
             -m 512M `
             -kernel kernel/vmlinuz-6.17.0-23-generic `
             -initrd telemetry-initramfs.cpio.gz `
             -append "console=ttyS0 rdinit=/init panic=-1" `
             -nographic `
-#            -serial file:logs/telemetry.log
+            -serial file:logs/telemetry.log
 
       - name: Generate Rust dependency graph
         working-directory: rust_collector
