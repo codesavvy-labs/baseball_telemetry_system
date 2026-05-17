@@ -116,7 +116,7 @@ jobs:
             -initrd telemetry-initramfs.cpio.gz `
             -append "console=ttyS0 rdinit=/init panic=-1" `
             -nographic `
-@            -serial file:logs/telemetry.log
+#            -serial file:logs/telemetry.log
 
       - name: Generate Rust dependency graph
         working-directory: rust_collector
