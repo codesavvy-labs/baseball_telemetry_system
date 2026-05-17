@@ -129,7 +129,7 @@ jobs:
 
           timeout 320s qemu-system-x86_64 `
             -machine virt `
-            -cpu cortex-a53 `
+            -cpu q35 `
             -m 512M `
             -kernel kernel/vmlinuz-6.17.0-23-generic `
             -initrd telemetry-initramfs.cpio.gz `
