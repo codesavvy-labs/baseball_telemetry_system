@@ -1,6 +1,7 @@
 name: Phase 3 - Configure Build Linting
 
 on:
+  push:
   workflow_dispatch:
 
 defaults:
@@ -125,18 +126,16 @@ jobs:
         shell: pwsh
         continue-on-error: true
         run: |
-          New-Item -ItemType Directory -Force telemetry-artifacts | Out-Null
 
-          timeout 20s qemu-system-aarch64 `
+          timeout 320s qemu-system-aarch64 `
             -machine virt `
             -cpu cortex-a53 `
             -m 512M `
+            -kernel kernel/vmlinuz-6.17.0-23-generic \
+            -initrd telemetry-initramfs.cpio.gz \
+            -append "console=ttyS0 rdinit=/init panic=-1" \
             -nographic `
-            -cdrom alpine-aarch64.iso `
-            -boot d `
-            -serial mon:stdio `
-            -display none `
-            > telemetry-artifacts/qemu-telemetry.log 2>&1
+            -serial file:logs/telemetry.log
           
           Get-Content telemetry-artifacts/qemu-telemetry.log
 
