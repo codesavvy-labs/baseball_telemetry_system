@@ -122,23 +122,23 @@ jobs:
         run: |
           wget https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/aarch64/alpine-virt-3.20.3-aarch64.iso -O alpine-aarch64.iso
 
-      - name: QEMU - Boot Alpine smoke test
+      - name: QEMU - Boot telemetry initramfs
         shell: pwsh
-        continue-on-error: true
         run: |
+          New-Item -ItemType Directory -Force logs | Out-Null
 
           timeout 320s qemu-system-aarch64 `
             -machine virt `
             -cpu cortex-a53 `
             -m 512M `
-            -kernel kernel/vmlinuz-6.17.0-23-generic \
-            -initrd telemetry-initramfs.cpio.gz \
-            -append "console=ttyS0 rdinit=/init panic=-1" \
+            -kernel kernel/vmlinuz-6.17.0-23-generic `
+            -initrd telemetry-initramfs.cpio.gz `
+            -append "console=ttyS0 rdinit=/init panic=-1" `
             -nographic `
             -serial file:logs/telemetry.log
-          
-          Get-Content telemetry-artifacts/qemu-telemetry.log
 
+          Get-Content logs/telemetry.log
+          
       - name: Generate Rust dependency graph
         working-directory: rust_collector
         run: |
