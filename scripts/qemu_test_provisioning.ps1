@@ -1,4 +1,4 @@
-$basePath = "qemu-test"
+$basePath = Join-Path $pwd "qemu-test"
 
 if (-not (Test-Path $basePath)) {  # Avoid overwriting existing folders
    New-Item -Path $basePath -ItemType Directory -Force | Out-Null
@@ -33,7 +33,7 @@ $FsTestFolders = @(
     "sys"
     "dev"
 )
-$fsBasePath = "qemu-test/initramfsinitramfs"
+$fsBasePath = Join-Path $basePath "initramfsinitramfs"
 foreach ($folder in $FsTestFolders) {
     $folderPath = Join-Path $fsBasePath $folder
     if (-not (Test-Path $folderPath)) {  # Avoid overwriting existing folders
