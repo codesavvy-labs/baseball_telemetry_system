@@ -16,13 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify PowerShell
-        shell: pwsh
-        run: |
-          Write-Host "PowerShell Version:"
-          $PSVersionTable
-          pwsh --version
-
       - name: Verify Windows Provisioning
         shell: pwsh
         run: |
@@ -41,6 +34,12 @@ jobs:
         run: |
           .\scripts\check_provisioning.ps1
           .\scripts\check_linux_provisioning.ps1
+
+      - name: QEMU Test Provisioning
+        shell: pwsh
+        run: |
+          .\scripts\qemu_test_provisioning.ps1
+
 
 
 

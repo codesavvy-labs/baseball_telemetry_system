@@ -1,11 +1,12 @@
 $RequiredFiles = @(
     "/usr/share/OVMF/OVMF_CODE_4M.fd",
     "/usr/share/OVMF/OVMF_VARS_4M.fd"
+    "/bin/busybox"
 )
 
 foreach ($File in $RequiredFiles) {
     if (-not (Test-Path $File)) {
-        throw "Missing required firmware file: $File"
+        throw "Missing required file: $File"
     }
 }
 
