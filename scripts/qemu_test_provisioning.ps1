@@ -53,7 +53,7 @@ Copy-Item `
 
 Copy-Item `
       -Path "/bin/busybox" `
-      -Destination "$basePath/initramfs/bin/busybox" `
+      -Destination "$basePath/initramfs/bin" `
       -Force
 
 Copy-Item `
