@@ -5,7 +5,6 @@ function New-QEMU-Folders {
         [string]$BaseFolder,            # Explicitly declare as string array
 
         [Parameter(Mandatory = $true)]
-        [ValidateNotNullOrEmpty()]   # Ensure array is not null or empty
         [string[]]$SubFolders             # Explicitly declare as string array
    )
    
