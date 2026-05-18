@@ -1,4 +1,5 @@
 $basePath = Join-Path $pwd "qemu-test"
+Write-Host $basePath
 
 if (-not (Test-Path $basePath)) {  # Avoid overwriting existing folders
    New-Item -Path $basePath -ItemType Directory -Force | Out-Null
