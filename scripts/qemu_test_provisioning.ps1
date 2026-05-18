@@ -37,7 +37,7 @@ $FsTestFolders = @(
     "sys",
     "dev"
 )
-New-QEMU-Folders -BaseFolder $BasePath -SubFolders $QemuTestFolders
+#New-QEMU-Folders -BaseFolder $BasePath -SubFolders $QemuTestFolders
 New-QEMU-Folders -BaseFolder (Join-Path $BasePath "initramfs") -SubFolders $FsTestFolders
 
 Copy-Item `
