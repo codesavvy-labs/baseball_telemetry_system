@@ -4,7 +4,7 @@ function New-QEMU-Folders {
         [ValidateNotNullOrEmpty()]   # Ensure array is not null or empty
         [string]$BaseFolder,            # Explicitly declare as string array
 
-        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]   # Ensure array is not null or empty
         [string[]]$SubFolders             # Explicitly declare as string array
    )
    
@@ -37,6 +37,7 @@ $FsTestFolders = @(
     "sys",
     "dev"
 )
+New-QEMU-Folders -BaseFolder $BasePath
 New-QEMU-Folders -BaseFolder $BasePath -SubFolders $QemuTestFolders
 New-QEMU-Folders -BaseFolder (Join-Path $BasePath "initramfs") -SubFolders $FsTestFolders
 
