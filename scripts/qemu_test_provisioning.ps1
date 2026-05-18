@@ -1,7 +1,7 @@
 $basePath = "qemu-test"
 
 if (-not (Test-Path $basePath)) {  # Avoid overwriting existing folders
-   New-Item -Path $basePath -ItemType Directory | Out-Null
+   New-Item -Path $basePath -ItemType Directory -Force -Path | Out-Null
       
    if (-not (Test-Path $basePath)) {
       throw "Missing required file: $basePath"
@@ -18,7 +18,7 @@ $QemuTestFolders = @(
 foreach ($folder in $QemuTestFolders) {
    $folderPath = Join-Path $basePath $folder
    if (-not (Test-Path $folderPath)) {  # Avoid overwriting existing folders
-      New-Item -Path $folderPath -ItemType Directory | Out-Null
+      New-Item -Path $folderPath -ItemType Directory -Force -Path | Out-Null
       
       if (-not (Test-Path $folderPath)) {
          throw "Missing required file: $folderPath"
@@ -37,7 +37,7 @@ $fsBasePath = "qemu-test/initramfsinitramfs"
 foreach ($folder in $FsTestFolders) {
     $folderPath = Join-Path $fsBasePath $folder
     if (-not (Test-Path $folderPath)) {  # Avoid overwriting existing folders
-        New-Item -Path $folderPath -ItemType Directory | Out-Null
+        New-Item -Path $folderPath -ItemType Directory -Force -Path | Out-Null
       
       if (-not (Test-Path $folderPath)) {
          throw "Missing required file: $folderPath"
@@ -45,3 +45,19 @@ foreach ($folder in $FsTestFolders) {
    }
 }
 
+Copy-Item `
+      -Path "/usr/share/OVMF/OVMF_VARS_4M.fd" `
+      -Destination "$basePath/firmware/OVMF_VARS_4M.fd" `
+      -Force
+
+Copy-Item `
+      -Path "/bin/busybox" `
+      -Destination "$basePath/initramfs/bin/busybox" `
+      -Force
+
+Copy-Item `
+      -Path "scripts/init" `
+      -Destination "$basePath/initramfs" `
+      -Force
+
+find . | cpio -H newc -o | gzip > $basePath/telemetry-initramfs.cpio.gz
