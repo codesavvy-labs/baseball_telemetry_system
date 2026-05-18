@@ -57,3 +57,15 @@ Copy-Item `
       -Force
 
 bash -c "find . | cpio -H newc -o | gzip > $BasePath/telemetry-initramfs.cpio.gz"
+
+$Kernel = Get-ChildItem "/boot/vmlinuz-*" |
+    Where-Object { -not $_.Name.EndsWith(".old") } |
+    Sort-Object LastWriteTime -Descending |
+    Select-Object -First 1
+
+$KernelDestination = Join-Path $BasePath "kernel"
+
+Copy-Item `
+    -Path $Kernel.FullName `
+    -Destination $KernelDestination `
+    -Force
