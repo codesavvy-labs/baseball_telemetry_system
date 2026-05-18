@@ -1,64 +1,59 @@
-$basePath = Join-Path $pwd "qemu-test"
-Write-Host $basePath
+function New-QEMU-Folders {
+   param (
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]   # Ensure array is not null or empty
+        [string]$BaseFolder,            # Explicitly declare as string array
 
-if (-not (Test-Path $basePath)) {  # Avoid overwriting existing folders
-   New-Item -Path $basePath -ItemType Directory -Force | Out-Null
-      
-   if (-not (Test-Path $basePath)) {
-      throw "Missing required file: $basePath"
-   }
-}
-
-$QemuTestFolders = @(
-    "images",
-    "firmware"
-    "kernel"
-    "initramfsinitramfs"
-)
-
-foreach ($folder in $QemuTestFolders) {
-   $folderPath = Join-Path $basePath $folder
-   if (-not (Test-Path $folderPath)) {  # Avoid overwriting existing folders
-      New-Item -Path $folderPath -ItemType Directory -Force | Out-Null
-      
-      if (-not (Test-Path $folderPath)) {
-         throw "Missing required file: $folderPath"
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]   # Ensure array is not null or empty
+        [string[]]$SubFolders             # Explicitly declare as string array
+   )
+   
+   foreach ($folder in $SubFolders) {
+      $folderPath = Join-Path $BaseFolder $folder
+      if (-not (Test-Path $folderPath)) {  # Avoid overwriting existing folders
+         New-Item -Path $folderPath -ItemType Directory -Force | Out-Null
+         
+         if (-not (Test-Path $folderPath)) {
+            throw "Missing required folder: $folderPath"
+         }
       }
    }
 }
 
+$qemu_main_folder = "qemu_test"
+$BasePath = Join-Path $pwd $qemu_main_folder
+
+$QemuTestFolders = @(
+    "",
+    "images",
+    "firmware",
+    "kernel",
+    "initramfs"
+)
 
 $FsTestFolders = @(
     "bin",
-    "proc"
-    "sys"
+    "proc",
+    "sys",
     "dev"
 )
-$fsBasePath = Join-Path $basePath "initramfs"
-foreach ($folder in $FsTestFolders) {
-    $folderPath = Join-Path $fsBasePath $folder
-    if (-not (Test-Path $folderPath)) {  # Avoid overwriting existing folders
-        New-Item -Path $folderPath -ItemType Directory -Force | Out-Null
-      
-      if (-not (Test-Path $folderPath)) {
-         throw "Missing required file: $folderPath"
-      }
-   }
-}
+New-QEMU-Folders -BaseFolder $BasePath -SubFolders $QemuTestFolders
+New-QEMU-Folders -BaseFolder (Join-Path $BasePath "initramfs") -SubFolders $FsTestFolders
 
 Copy-Item `
       -Path "/usr/share/OVMF/OVMF_VARS_4M.fd" `
-      -Destination "$basePath/firmware/OVMF_VARS_4M.fd" `
+      -Destination (Join-Path $BasePath "firmware") `
       -Force
 
 Copy-Item `
       -Path "/bin/busybox" `
-      -Destination "$basePath/initramfs/bin" `
+      -Destination (Join-Path $BasePath "initramfs/bin") `
       -Force
 
 Copy-Item `
       -Path "scripts/init" `
-      -Destination "$basePath/initramfs" `
+      -Destination (Join-Path $BasePath "initramfs") `
       -Force
 
-find . | cpio -H newc -o | gzip > $basePath/telemetry-initramfs.cpio.gz
+bash -c "find . | cpio -H newc -o | gzip > $BasePath/telemetry-initramfs.cpio.gz"
