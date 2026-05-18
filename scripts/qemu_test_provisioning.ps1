@@ -24,7 +24,7 @@ $qemu_main_folder = "qemu_test"
 $BasePath = Join-Path $pwd $qemu_main_folder
 
 $QemuTestFolders = @(
-    "",
+    #"",
     "images",
     "firmware",
     "kernel",
@@ -37,7 +37,7 @@ $FsTestFolders = @(
     "sys",
     "dev"
 )
-#New-QEMU-Folders -BaseFolder $BasePath -SubFolders $QemuTestFolders
+New-QEMU-Folders -BaseFolder $BasePath -SubFolders $QemuTestFolders
 New-QEMU-Folders -BaseFolder (Join-Path $BasePath "initramfs") -SubFolders $FsTestFolders
 
 Copy-Item `
