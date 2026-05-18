@@ -1,0 +1,46 @@
+name: Phase 3 - Configure Build Linting
+
+on:
+  push:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  build_on_win11:
+    runs-on: [self-hosted, Windows, x64]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify PowerShell
+        shell: pwsh
+        run: |
+          Write-Host "PowerShell Version:"
+          $PSVersionTable
+          pwsh --version
+
+      - name: Verify Windows Provisioning
+        shell: pwsh
+        run: |
+          .\scripts\check_provisioning.ps1
+          .\scripts\check_windows_provisioning.ps1
+
+  build_on_linux:
+    runs-on: [self-hosted, Linux, X64]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify Linux Provisioning
+        shell: pwsh
+        run: |
+          .\scripts\check_provisioning.ps1
+          .\scripts\check_linux_provisioning.ps1
+
+
+
