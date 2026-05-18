@@ -34,7 +34,7 @@ $FsTestFolders = @(
     "sys"
     "dev"
 )
-$fsBasePath = Join-Path $basePath "initramfsinitramfs"
+$fsBasePath = Join-Path $basePath "initramfs"
 foreach ($folder in $FsTestFolders) {
     $folderPath = Join-Path $fsBasePath $folder
     if (-not (Test-Path $folderPath)) {  # Avoid overwriting existing folders
