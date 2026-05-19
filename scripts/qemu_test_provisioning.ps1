@@ -52,10 +52,15 @@ Copy-Item `
       -Destination (Join-Path $BasePath "initramfs/bin") `
       -Force
 
+$RepoRoot = Split-Path $PSScriptRoot -Parent
+$SourceInit = Join-Path $RepoRoot "scripts/init"
+$InitPath = Join-Path $BasePath "initramfs/init"
+
 Copy-Item `
-      -Path "scripts/init" `
-      -Destination (Join-Path $BasePath "initramfs") `
-      -Force
+    -Path $SourceInit `
+    -Destination $InitPath `
+    -Force
+
 
 $InitPath = Join-Path $BasePath "initramfs/init"
 
@@ -65,7 +70,24 @@ $InitPath = Join-Path $BasePath "initramfs/init"
 
 chmod +x $InitPath
 
-bash -c "find . | cpio -H newc -o | gzip > $BasePath/telemetry-initramfs.cpio.gz"
+if (-not (Test-Path $InitPath -PathType Leaf)) {
+    throw "Missing init file: $InitPath"
+}
+
+if (-not (Test-Path (Join-Path $BasePath "initramfs/bin/busybox") -PathType Leaf)) {
+    throw "Missing BusyBox in initramfs"
+}
+
+$InitramfsPath = Join-Path $BasePath "initramfs"
+$InitramfsImage = Join-Path $BasePath "telemetry-initramfs.cpio.gz"
+
+Push-Location $InitramfsPath
+try {
+    bash -c "find . | cpio -H newc -o | gzip > '$InitramfsImage'"
+}
+finally {
+    Pop-Location
+}
 
 $Profiles = Get-Content "config/qemu-profiles.json" | ConvertFrom-Json
 
