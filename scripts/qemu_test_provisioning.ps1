@@ -57,6 +57,14 @@ Copy-Item `
       -Destination (Join-Path $BasePath "initramfs") `
       -Force
 
+$InitPath = Join-Path $BasePath "initramfs/init"
+
+(Get-Content $InitPath -Raw) `
+    -replace "`r`n", "`n" |
+    Set-Content $InitPath -NoNewline
+
+chmod +x $InitPath
+
 bash -c "find . | cpio -H newc -o | gzip > $BasePath/telemetry-initramfs.cpio.gz"
 
 $Profiles = Get-Content "config/qemu-profiles.json" | ConvertFrom-Json
@@ -75,4 +83,5 @@ $TelemetryLog = Join-Path $BasePath "logs/telemetry.log"
     -nographic `
     -serial "file:$TelemetryLog"
 
-
+#Get-Content (Join-Path $BasePath "logs/telemetry.log")
+Get-Content $TelemetryLog
