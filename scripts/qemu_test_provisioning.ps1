@@ -66,7 +66,7 @@ $QemuProfile = $Profiles.PSObject.Properties[$ProfileName].Value
 
 $TelemetryLog = Join-Path $BasePath "logs/telemetry.log"
 
-& $QemuProfile.qemuBinary `
+& timeout 30s $QemuProfile.qemuBinary `
     -machine $QemuProfile.machine `
     -m $QemuProfile.memory `
     -kernel $QemuProfile.kernelPath `
