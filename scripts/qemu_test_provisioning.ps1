@@ -26,7 +26,7 @@ $BasePath = Join-Path $pwd $qemu_main_folder
 $ProfileName = "ubuntu-x86_64"
 
 $QemuTestFolders = @(
-    "images",
+    "logs",
     "firmware",
     "kernel",
     "initramfs"
@@ -63,7 +63,7 @@ $Profiles = Get-Content "config/qemu-profiles.json" | ConvertFrom-Json
 
 $QemuProfile = $Profiles.PSObject.Properties[$ProfileName].Value
 #$QemuProfile = $Profiles.$ProfileName
-
+$LogsPath = Join-Path $BasePath "logs"
 & $QemuProfile.qemuBinary `
     -machine $QemuProfile.machine `
     -m $QemuProfile.memory `
@@ -71,4 +71,4 @@ $QemuProfile = $Profiles.PSObject.Properties[$ProfileName].Value
     -initrd telemetry-initramfs.cpio.gz `
     -append "console=ttyS0 rdinit=/init panic=-1" `
     -nographic `
-    -serial file:logs/telemetry.log
+    -serial file:$LogsPath
