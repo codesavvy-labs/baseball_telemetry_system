@@ -40,6 +40,12 @@ jobs:
         run: |
           .\scripts\qemu_test_provisioning.ps1
 
+      - name: Upload QEMU Telemetry Log
+        uses: actions/upload-artifact@v4
+        with:
+          name: telemetry.log
+          path: qemu-test/logs 
+
 
 
 
