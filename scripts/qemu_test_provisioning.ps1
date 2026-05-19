@@ -63,12 +63,16 @@ $Profiles = Get-Content "config/qemu-profiles.json" | ConvertFrom-Json
 
 $QemuProfile = $Profiles.PSObject.Properties[$ProfileName].Value
 #$QemuProfile = $Profiles.$ProfileName
-$LogsPath = Join-Path $BasePath "logs"
+
+$TelemetryLog = Join-Path $BasePath "logs/telemetry.log"
+
 & $QemuProfile.qemuBinary `
     -machine $QemuProfile.machine `
     -m $QemuProfile.memory `
     -kernel $QemuProfile.kernelPath `
-    -initrd telemetry-initramfs.cpio.gz `
+    -initrd (Join-Path $BasePath "telemetry-initramfs.cpio.gz") `
     -append "console=ttyS0 rdinit=/init panic=-1" `
     -nographic `
-    -serial file:$LogsPath
+    -serial "file:$TelemetryLog"
+
+
