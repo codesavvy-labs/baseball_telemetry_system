@@ -20,11 +20,12 @@ function New-QEMU-Folders {
    }
 }
 
-$qemu_main_folder = "qemu_test"
+$qemu_main_folder = "qemu-test"
 $BasePath = Join-Path $pwd $qemu_main_folder
 
+$ProfileName = "ubuntu-x86_64"
+
 $QemuTestFolders = @(
-    #"",
     "images",
     "firmware",
     "kernel",
@@ -58,14 +59,16 @@ Copy-Item `
 
 bash -c "find . | cpio -H newc -o | gzip > $BasePath/telemetry-initramfs.cpio.gz"
 
-$Kernel = Get-ChildItem "/boot/vmlinuz-*" |
-    Where-Object { -not $_.Name.EndsWith(".old") } |
-    Sort-Object LastWriteTime -Descending |
-    Select-Object -First 1
+$Profiles = Get-Content "config/qemu-profiles.json" | ConvertFrom-Json
 
-$KernelDestination = Join-Path $BasePath "kernel"
+$QemuProfile = $Profiles.PSObject.Properties[$ProfileName].Value
+#$QemuProfile = $Profiles.$ProfileName
 
-Copy-Item `
-    -Path $Kernel.FullName `
-    -Destination $KernelDestination `
-    -Force
+& $QemuProfile.qemuBinary `
+    -machine $QemuProfile.machine `
+    -m $QemuProfile.memory `
+    -kernel $QemuProfile.kernelPath `
+    -initrd telemetry-initramfs.cpio.gz `
+    -append "console=ttyS0 rdinit=/init panic=-1" `
+    -nographic `
+    -serial file:logs/telemetry.log
