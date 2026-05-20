@@ -101,7 +101,8 @@ $TelemetryLog = Join-Path $BasePath "logs/telemetry.log"
     -m $QemuProfile.memory `
     -kernel $QemuProfile.kernelPath `
     -initrd (Join-Path $BasePath "telemetry-initramfs.cpio.gz") `
-    -append "console=ttyS0 rdinit=/init panic=-1" `
+    -append "console=ttyS0 rdinit=/init panic=-1 noapic" `
+    -no-reboot `
     -nographic `
     -serial "file:$TelemetryLog"
 
