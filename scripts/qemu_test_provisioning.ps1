@@ -96,7 +96,7 @@ $QemuProfile = $Profiles.PSObject.Properties[$ProfileName].Value
 
 $TelemetryLog = Join-Path $BasePath "logs/telemetry.log"
 
-& timeout 30s $QemuProfile.qemuBinary `
+& timeout 60s $QemuProfile.qemuBinary `
     -machine $QemuProfile.machine `
     -m $QemuProfile.memory `
     -kernel $QemuProfile.kernelPath `
@@ -108,3 +108,7 @@ $TelemetryLog = Join-Path $BasePath "logs/telemetry.log"
 
 #Get-Content (Join-Path $BasePath "logs/telemetry.log")
 Get-Content $TelemetryLog
+
+if ($LASTEXITCODE -ne 0 -and $LASTEXITCODE -ne 124) {
+    throw "QEMU failed with exit code $LASTEXITCODE"
+}
