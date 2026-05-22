@@ -187,6 +187,7 @@ Planned areas of exploration include:
 * Additional telemetry pipelines
 * Build orchestration improvements
 * Enhanced architecture visualization
+* Digitally signing binaries
 * Runner capability labeling and provisioning
 
 ---
