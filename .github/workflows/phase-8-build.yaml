@@ -1,4 +1,4 @@
-name: Phase 3 - Configure Build Linting
+name: Phase 8 - Full orchestration for QEMU
 
 on:
   push:
