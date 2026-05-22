@@ -10,7 +10,7 @@ defaults:
 
 jobs:
   build_on_win11:
-    runs-on: [self-hosted, Windows, x64]
+    runs-on: [self-hosted, Windows, X64]
 
     steps:
       - name: Checkout
