@@ -1,0 +1,25 @@
+Linux
+    No more HTTPS cloning with GitHub. Too much of a PIA.
+    Create an SSH key and save it in GitHub
+        ssh-keygen -t ed25519 -C "tomhaley2015@gmail.com"
+            I used defaults & no password. Ymmv
+        Start the SSH agent
+            eval "$(ssh-agent -s)"
+        Then
+            ssh-add ~/.ssh/id_ed25519
+        Display Public key
+            cat ~/.ssh/id_ed25519.pub
+        Copy entire line
+        On GitHub
+            GitHub
+                → Settings
+                    → SSH and GPG keys
+                    → New SSH Key
+                Copy key into the key
+                Name it
+                    WSL-Ubuntu-24.04
+                Save it
+        On Linux Test 
+            ssh -T git@github.com
+            answer yes
+            should see an autenticated message

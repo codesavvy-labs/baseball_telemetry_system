@@ -1,0 +1,103 @@
+In making my dockerfile I raised this question:
+    rm -rf /var/lib/apt/lists/*
+    ChatGPT explains:
+        That's a very common Docker optimization.
+
+        The command: rm -rf /var/lib/apt/lists/*
+
+        removes the package index files that apt-get update downloaded.
+
+        When you run:
+
+        apt-get update
+
+        Ubuntu downloads package metadata into:
+
+        /var/lib/apt/lists/
+
+        These files are needed so apt-get install knows what packages are available.
+        After installation, however, they're usually no longer needed.
+        So this pattern:
+
+        RUN apt-get update && \
+            apt-get install -y python3 cmake ninja-build && \
+            rm -rf /var/lib/apt/lists/*
+
+        means:
+
+        Download package lists
+        Install packages
+        Delete package lists
+        Why delete them? Primarily image size.
+
+        Without cleanup:
+
+        Image
+        ├── Python
+        ├── CMake
+        ├── Ninja
+        └── apt package lists
+
+        With cleanup:
+
+        Image
+        ├── Python
+        ├── CMake
+        └── Ninja
+
+        The package lists can be tens or even hundreds of MB.
+
+        Why in the same RUN? This is where Docker layers become important.
+
+        Suppose you wrote:
+
+        RUN apt-get update
+        RUN apt-get install -y python3
+        RUN rm -rf /var/lib/apt/lists/*
+
+        Docker creates three layers:
+
+        Layer 1: package lists downloaded
+        Layer 2: packages installed
+        Layer 3: package lists deleted
+
+        The problem is Layer 1 still exists in image history.
+        The files were deleted in a later layer, but the bytes remain in the image.
+
+        By doing:
+
+        RUN apt-get update && \
+            apt-get install -y python3 && \
+            rm -rf /var/lib/apt/lists/*
+
+        everything happens in one layer.
+
+        Result:
+
+        Layer
+        ├── Python installed
+        └── package lists already removed
+
+        Smaller image.
+
+        This gets into one of Docker's most important concepts:
+        Every RUN creates a layer.
+        That's why you'll often see Dockerfiles written like:
+
+        RUN apt-get update && \
+            apt-get install -y \
+                python3 \
+                cmake \
+                ninja-build && \
+            rm -rf /var/lib/apt/lists/*
+
+        Not because it's prettier, but because it creates a single efficient layer.
+        You're starting to bump into the distinction between:
+
+        Making Docker work
+
+        and
+
+        Writing a good Dockerfile
+
+        The image worked before. The cleanup line is about making the image cleaner and better

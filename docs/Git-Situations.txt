@@ -1,0 +1,34 @@
+Context: I was too lazy to create on SSH key on wsl and clone the repo using the SSH link on GitHub. Instead I used the SSH link.  I made changes to a file, then did the foloowing:
+    git status
+    git add
+    git commit -m "whatever message"
+    git push
+git push failed due to 2FA.
+
+Continuing to be lazy I copied the changed file to the windows OS where I had cloned the repo. Did:
+    git status
+    git add
+    git commit -m "Whatever message"
+    git push
+Everything was fine on Windows
+
+Went back to wsl and wanted to make sure I could push commits on wsl.
+Created the SSH key, authenticated and did the following:
+    git status
+    git branch --show-current
+    git log --online --decorate --graph --all 10
+Got error messages 
+    your branch and origin feature/linux-ci-container have diverged
+    and have 1 and 1 different commits each, respectfully,
+      (use git pull if you want to integrate the remote branch with yours)
+Did the following
+    git pull --rebase origin feature/linux-ci-container
+    git push
+    got a message files were up to date.
+    ChatGPT stated - 
+        What probably happened is:
+            You made a Dockerfile commit in Windows.
+            You made a very similar Dockerfile commit in WSL.
+            Git detected the patch was already represented on the remote branch.
+            During rebase it skipped the duplicate commit.
+            Local and remote became synchronized.
