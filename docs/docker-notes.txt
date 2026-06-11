@@ -101,3 +101,22 @@ In making my dockerfile I raised this question:
         Writing a good Dockerfile
 
         The image worked before. The cleanup line is about making the image cleaner and better
+
+
+docker run --rm -v "$PWD":/scripts -w /scripts baseball-telem:latest ./validate-build-env.sh
+    --rm                  : When the container exits, automatically delete it.
+    -v "$PWD":/scripts    : Mount a volume makes that directory visible inside the container as
+    -w /scripts           : Sets the working directory inside the container
+    baseball-telem:latest : container
+
+docker run --rm -v "$PWD" -w "$PWD"/scripts baseball-telem:latest ./scripts/validate-build-env.sh
+
+docker run --rm \
+  --mount type=bind,source=/home/tomha/baseball_telemetry_system/,target=/sys_root \
+  -w /sys_root/scripts \
+  baseball-telem ./validate-build-env.sh
+docker run --rm \
+  --mount type=bind,source=/home/tomha/baseball_telemetry_system/,target=/workspace \
+  -w /workspace \
+  baseball-telem \
+  ./scripts/validate-build-env.sh

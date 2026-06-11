@@ -1,7 +1,6 @@
 name: Phase 8 - Full orchestration for QEMU
 
 on:
-  push:
   workflow_dispatch:
 
 defaults:
