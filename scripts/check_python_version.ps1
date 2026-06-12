@@ -3,7 +3,7 @@ $lowestVersion = "3.12.0"
 $toorecentVersion = "3.13.0"
 try {
     # Try to get Python version
-    $pythonVersionOutput = & python --version 2>&1
+    $pythonVersionOutput = & python3 --version 2>&1
     Write-Host $pythonVersionOutput
 
     if (-not $pythonVersionOutput) {
