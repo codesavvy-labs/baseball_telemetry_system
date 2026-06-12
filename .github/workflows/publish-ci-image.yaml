@@ -12,6 +12,12 @@ permissions:
   packages: write
 
 jobs:
+  fix-permisions:
+    runs-on: [self-hosted, Linux, X64]
+    steps:
+      - name: Fix workspace permissions
+        run: sudo chown -R $USER:$USER /home/tomh/actions-runner/_work/baseball_telemetry_system
+
   publish-image:
     runs-on: [self-hosted, Linux, X64]
     
