@@ -97,9 +97,6 @@ jobs:
     runs-on: [self-hosted, Linux, X64]
     container:
       image: ghcr.io/codesavvy-labs/baseball-telem-ci:latest      
-      options: >-
-        --mount type=bind,source=/home/tomha/baseball_telemetry_system/,target=/sys_root   
-        -w /sys_root/
     steps:
       - name: Checkout
         uses: actions/checkout@v4
