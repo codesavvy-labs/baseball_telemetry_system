@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - Dockerfile
-      - .github/workflows/publish-ci-image.yml
+      - .github/workflows/publish-ci-image.yaml
   workflow_dispatch:
 
 permissions:
