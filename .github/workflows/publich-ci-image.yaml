@@ -97,16 +97,18 @@ jobs:
     runs-on: [self-hosted, Linux, X64]
     container:
       image: ghcr.io/codesavvy-labs/baseball-telem-ci:latest      
-
+      options: >-
+        --mount type=bind,source=/home/tomha/baseball_telemetry_system/,target=/sys_root   
+        -w /sys_root/
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Verify Linux Provisioning
-        run: ./scripts/validate-build-env.sh
+        run: pwsh ./scripts/validate-build-env.sh
 
       - name: QEMU Test Provisioning
-        run: .\scripts\qemu_test_provisioning.ps1
+        run: pwsh ./scripts/qemu_test_provisioning.ps1
 
       - name: Generate Rust dependency graph
         working-directory: rust_collector
