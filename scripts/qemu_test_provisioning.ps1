@@ -67,6 +67,7 @@ $InitPath = Join-Path $BasePath "initramfs/init"
 (Get-Content $InitPath -Raw) `
     -replace "`r`n", "`n" |
     Set-Content $InitPath -NoNewline
+Write-Host "Setting execute permissions on $InitPath"
 
 chmod +x $InitPath
 
@@ -88,14 +89,14 @@ try {
 finally {
     Pop-Location
 }
-
+Write-Host "Initramfs image created: $InitramfsImage"
 $Profiles = Get-Content "config/qemu-profiles.json" | ConvertFrom-Json
 
 $QemuProfile = $Profiles.PSObject.Properties[$ProfileName].Value
 #$QemuProfile = $Profiles.$ProfileName
 
 $TelemetryLog = Join-Path $BasePath "logs/telemetry.log"
-
+Write-Host "Running QEMU test with profile: $ProfileName"
 & timeout 60s $QemuProfile.qemuBinary `
     -machine $QemuProfile.machine `
     -m $QemuProfile.memory `

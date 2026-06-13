@@ -1,6 +1,6 @@
 {
   "ubuntu-x86_64": {
-    "kernelPath": "/opt/qemu-test/kernels/vmlinuz-6.17.0-23-generic",
+    "kernelPath": "/opt/qemu-test/kernels/vmlinuz-6.8.0-124-generic",
     "qemuBinary": "qemu-system-x86_64",
     "machine": "q35",
     "memory": "512M",

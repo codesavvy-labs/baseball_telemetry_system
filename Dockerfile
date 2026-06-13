@@ -31,7 +31,7 @@ RUN test -f /usr/share/OVMF/OVMF_CODE_4M.fd && \
 
 RUN mkdir -p /opt/qemu-test/kernels && \
     cp /boot/vmlinuz-* /opt/qemu-test/kernels/
-    
+
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 
 ENV PATH="/root/.cargo/bin:${PATH}"
