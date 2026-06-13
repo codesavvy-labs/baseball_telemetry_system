@@ -95,7 +95,7 @@ jobs:
 
 
   build_on_linux:
-    runs-on: [self-hosted, Linux, X64]
+    runs-on: ubuntu-24.04
     container:
       image: ghcr.io/codesavvy-labs/baseball-telem-ci:latest      
     steps:
