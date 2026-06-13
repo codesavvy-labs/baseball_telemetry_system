@@ -104,7 +104,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Verify Linux Provisioning
-        run: pwsh ./scripts/validate-build-env.sh
+        shell: bash
+        run: ./scripts/validate-build-env.sh
 
       - name: QEMU Test Provisioning
         run: pwsh ./scripts/qemu_test_provisioning.ps1
