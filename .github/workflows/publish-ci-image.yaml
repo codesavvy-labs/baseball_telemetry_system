@@ -103,6 +103,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Debug Rust environment
+        shell: bash
+        run: |
+          whoami
+          echo "HOME=$HOME"
+          which rustup || true
+          which cargo || true
+          rustup show || true
+          ls -la /root/.cargo || true
+          ls -la "$HOME/.cargo" || true
+          
       - name: Verify Linux Provisioning
         shell: bash
         run: ./scripts/validate-build-env.sh
