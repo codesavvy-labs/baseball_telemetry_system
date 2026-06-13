@@ -96,6 +96,7 @@ jobs:
 
   build_on_linux:
     runs-on: ubuntu-24.04
+    needs: publish-image
     container:
       image: ghcr.io/codesavvy-labs/baseball-telem-ci:latest      
     steps:
