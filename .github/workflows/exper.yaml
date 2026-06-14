@@ -1,0 +1,181 @@
+name: Dynamic Path Filtering
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    outputs:
+      linux-app: ${{ steps.filter.outputs.frontend }}
+      linux-infrastructure: ${{ steps.filter.outputs.infrastructure }}
+      linux-docs: ${{ steps.filter.outputs.docs }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            linux-app:
+              - 'config/**'
+              - 'cpp_app/**'
+              - 'python_app/**'
+              - 'qemu-test/**'
+              - 'rust_collector/**'
+            linux-infrastructure:
+              - 'Dockerfile'
+            linuxdocs:
+              - 'docs/**'
+              - '**.md'
+      - name: List files
+        shell: bash
+        run: ls -l
+
+  linux-app:
+    needs: changes
+    if: needs.changes.outputs.linux-app == 'true'
+    runs-on: ubuntu-24.04
+    container:
+        image: ghcr.io/codesavvy-labs/baseball-telem-ci:latest      
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Debug Rust environment
+        shell: bash
+        run: |
+          whoami
+          echo "HOME=$HOME"
+          which rustup || true
+          which cargo || true
+          rustup show || true
+          ls -la /root/.cargo || true
+          ls -la "$HOME/.cargo" || true
+          
+      - name: Verify Linux Provisioning
+        shell: bash
+        run: ./scripts/validate-build-env.sh
+
+      - name: QEMU Test Provisioning
+        shell: pwsh
+        run: pwsh ./scripts/qemu_test_provisioning.ps1
+
+      - name: Generate Rust dependency graph
+        working-directory: rust_collector
+        run: |
+            mkdir -p ../docs/architecture/generated
+            cargo tree > ../docs/architecture/generated/rust-cargo-tree.txt
+
+      - name: Render architecture diagrams
+        run: |
+          mkdir -p docs/architecture/generated
+          dot -Tsvg docs/architecture/source/system.dot -o docs/architecture/generated/system.svg
+            
+      - name: Cache Python pip
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~\AppData\Local\pip\Cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Cache Rust
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust_collector/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('rust_collector/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Python - Lint & Test
+        shell: bash  
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install black ruff
+          .venv/bin/python -m black --check python_app
+          .venv/bin/python -m ruff check python_app
+          .venv/bin/python -m pip install pytest
+          .venv/bin/python -m pytest python_app/tests -v
+
+      - name: Rust - Format, Lint, Test
+        working-directory: rust_collector     
+        run: |
+          cargo fmt -- --check
+          cargo clippy -- -D warnings
+          cargo test
+          cargo build --release
+
+      - name: Build C++
+        shell: bash
+        run: |
+          cmake -S cpp_app -B build/cpp -G Ninja
+          cmake --build build/cpp
+
+      - name: C++ - clang-tidy
+        shell: bash
+        run: |
+          clang-tidy cpp_app/src/main.cpp -- -Icpp_app/include
+      
+      - name: Upload Rust & artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-binary-${{ runner.os }}
+          path: |
+            rust_collector/target/release/rust_collector*
+            cpp_app/build/baseball_telemetry_cpp 
+
+      - name: Upload architecture graph
+        uses: actions/upload-artifact@v4
+        with:
+          name: architecture-dependency-graph
+          path: docs/architecture/generated/ 
+
+      - name: Upload Rust Tree
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-cargo-tree
+          path: docs/architecture/generated/ 
+
+      - name: Upload QEMU Telemetry Log
+        uses: actions/upload-artifact@v4
+        with:
+          name: telemetry.log
+          path: qemu-test/logs 
+
+
+  linux-infrastructure:
+    needs: changes
+    #if: needs.changes.outputs.linux-infrastructure == 'true'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build image
+        run: docker build -t ghcr.io/codesavvy-labs/baseball-telem-ci:latest .
+
+      - name: Push image
+        run: docker push ghcr.io/codesavvy-labs/baseball-telem-ci:latest
+
+  linux-docs:
+    needs: changes
+    if: needs.changes.outputs.linux-docs == 'true'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: ls

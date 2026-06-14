@@ -1,10 +1,6 @@
 name: Publish CI Image
 
 on:
-  push:
-    paths:
-      - Dockerfile
-      - .github/workflows/publish-ci-image.yaml
   workflow_dispatch:
 
 permissions:
