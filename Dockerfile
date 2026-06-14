@@ -35,8 +35,11 @@ RUN mkdir -p /opt/qemu-test/kernels && \
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 
 ENV PATH="/root/.cargo/bin:${PATH}"
-
+ENV RUSTUP_HOME=/root/.rustup
+ENV CARGO_HOME=/root/.cargo
+ENV RUSTC_VERSION=1.70.0
 RUN rustup default stable
 
 CMD ["bash"]
 
+    
