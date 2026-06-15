@@ -3,14 +3,6 @@ name: CI
 on:
   push:
     branches: [feature/linux-ci-container]
-    paths:
-      - 'cpp_app/**'
-      - 'python_app/**'
-      - 'rust_collector/**'
-      - 'scripts/**'
-      - 'config/**'
-      - 'qemu-test/**'
-      - '.github/workflows/ci.yml'
   workflow_dispatch:
 
 permissions:
@@ -21,33 +13,37 @@ jobs:
   changes:
     runs-on: ubuntu-24.04
     outputs:
-      linux-app: ${{ steps.filter.outputs.linux-app }}
-      windows-app: ${{ steps.filter.outputs.windows-app }}
+      linux: ${{ steps.detect.outputs.linux }}
+      windows: ${{ steps.detect.outputs.windows }}
 
     steps:
       - uses: actions/checkout@v4
-
-      - uses: dorny/paths-filter@v3
-        id: filter
         with:
-          filters: |
-            linux-app:
-              - 'config/**'
-              - 'cpp_app/**'
-              - 'python_app/**'
-              - 'qemu-test/**'
-              - 'rust_collector/**'
-              - 'scripts/**'
+          fetch-depth: 2
 
-            windows-app:
-              - 'cpp_app/**'
-              - 'python_app/**'
-              - 'rust_collector/**'
-              - 'scripts/**'
-              
+      - id: detect
+        shell: bash
+        run: |
+          changed="$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")"
+
+          echo "$changed"
+
+          linux=false
+          windows=false
+
+          if echo "$changed" | grep -E '^(config/|qemu-test/|cpp_app/|python_app/|rust_collector/|scripts/)'; then
+            linux=true
+          fi
+
+          if echo "$changed" | grep -E '^(cpp_app/|python_app/|rust_collector/|scripts/)'; then
+            windows=true
+          fi
+
+          echo "linux=$linux" >> "$GITHUB_OUTPUT"
+          echo "windows=$windows" >> "$GITHUB_OUTPUT"
   linux-app:
     needs: changes
-    if: needs.changes.outputs.linux-app == 'true'
+    if: ${{needs.changes.outputs.linux == 'true'}}
     runs-on: ubuntu-24.04
     container:
         image: ghcr.io/codesavvy-labs/baseball-telem-ci:latest      
@@ -164,7 +160,7 @@ jobs:
 
   windows-app:
     needs: changes
-    if: needs.changes.outputs.windows-app == 'true'
+    if: ${{needs.changes.outputs.windows == 'true'}}
     runs-on: [self-hosted, Windows, X64]
     steps:
       - name: Checkout
