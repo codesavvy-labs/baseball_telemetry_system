@@ -12,9 +12,9 @@ jobs:
   changes:
     runs-on: ubuntu-24.04
     outputs:
-      linux-app: ${{ steps.filter.outputs.frontend }}
-      linux-infrastructure: ${{ steps.filter.outputs.infrastructure }}
-      linux-docs: ${{ steps.filter.outputs.docs }}
+      linux-app: ${{ steps.filter.outputs.linux-app }}
+      linux-infrastructure: ${{ steps.filter.outputs.linux-infrastructure }}
+      linux-docs: ${{ steps.filter.outputs.linux-docs }}
 
     steps:
       - uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
               - 'rust_collector/**'
             linux-infrastructure:
               - 'Dockerfile'
-            linuxdocs:
+            linux-docs:
               - 'docs/**'
               - '**.md'
       - name: List files
@@ -158,7 +158,7 @@ jobs:
 
   linux-infrastructure:
     needs: changes
-    #if: needs.changes.outputs.linux-infrastructure == 'true'
+    if: needs.changes.outputs.linux-infrastructure == 'true'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
