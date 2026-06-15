@@ -31,6 +31,7 @@ jobs:
               - 'qemu-test/**'
               - 'rust_collector/**'
               - 'scripts/**'
+              - !'Dockerfile'
             windows-app:
               - 'config/**'
               - 'cpp_app/**'
@@ -38,7 +39,7 @@ jobs:
               - 'qemu-test/**'
               - 'rust_collector/**'
               - 'scripts/**'
-
+              - !'Dockerfile'
   linux-app:
     needs: changes
     if: needs.changes.outputs.linux-app == 'true'
