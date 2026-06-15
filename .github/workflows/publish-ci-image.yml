@@ -1,14 +1,16 @@
 name: Publish CI Image
 
 on:
-  workflow_dispatch:
-
+  push:
+    paths:
+      - Dockerfile
+      - .github/workflows/publish-ci-image.yml
+  
 permissions:
   contents: read
   packages: write
 
 jobs:
-
   publish-image:
     runs-on: ubuntu-24.04
     
@@ -23,6 +25,4 @@ jobs:
 
       - name: Push image
         run: docker push ghcr.io/codesavvy-labs/baseball-telem-ci:latest
-
-
 
