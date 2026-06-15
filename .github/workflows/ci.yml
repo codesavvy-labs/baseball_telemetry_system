@@ -3,8 +3,15 @@ name: CI
 on:
   push:
     branches: [feature/linux-ci-container]
+    paths:
+      - 'cpp_app/**'
+      - 'python_app/**'
+      - 'rust_collector/**'
+      - 'scripts/**'
+      - 'config/**'
+      - 'qemu-test/**'
+      - '.github/workflows/ci.yml'
   workflow_dispatch:
-
 
 permissions:
   contents: read
@@ -31,15 +38,13 @@ jobs:
               - 'qemu-test/**'
               - 'rust_collector/**'
               - 'scripts/**'
-              - !'Dockerfile'
+
             windows-app:
-              - 'config/**'
               - 'cpp_app/**'
               - 'python_app/**'
-              - 'qemu-test/**'
               - 'rust_collector/**'
               - 'scripts/**'
-              - !'Dockerfile'
+              
   linux-app:
     needs: changes
     if: needs.changes.outputs.linux-app == 'true'
