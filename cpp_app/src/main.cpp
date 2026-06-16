@@ -6,5 +6,6 @@ int main() {
     std::cout << "It is intended to be a stub for the actual implementation.\n";
     std::cout << "The actual implementation will be added later.\n";
     std::cout << "For now, this is just a placeholder.\n";
+    std::cout << "The actual implementation will be added later.\n";
     return 0;
 }
