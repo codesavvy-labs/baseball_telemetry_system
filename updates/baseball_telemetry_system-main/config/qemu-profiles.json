@@ -1,0 +1,16 @@
+{
+  "ubuntu-x86_64": {
+    "kernelPath": "/opt/qemu-test/kernels/vmlinuz-6.17.0-23-generic",
+    "qemuBinary": "qemu-system-x86_64",
+    "machine": "q35",
+    "memory": "512M",
+    "console": "ttyS0"
+  },
+
+  "arm64-virt": {
+    "kernelPath": "/opt/qemu-lab/kernels/Image-arm64",
+    "qemuBinary": "qemu-system-aarch64",
+    "machine": "virt",
+    "memory": "512M"
+  }
+}

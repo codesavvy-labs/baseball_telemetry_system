@@ -1,0 +1,8 @@
+```mermaid
+flowchart LR
+    Sender[Python sample sender] -->|TCP NDJSON| Collector[Rust TCP collector]
+    Collector -->|validated JSONL| File[Normalized telemetry file]
+    File --> Analyzer[Python summary]
+    QEMU[QEMU guest, planned] -.-> Collector
+    CPP[C++ target, role not defined] -.-> Collector
+```

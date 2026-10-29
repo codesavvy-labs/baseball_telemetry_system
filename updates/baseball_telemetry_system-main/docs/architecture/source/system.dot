@@ -1,0 +1,12 @@
+digraph Architecture {
+  rankdir=LR;
+
+  "Python Sample Sender" -> "Rust TCP Collector" [label="newline-delimited JSON"];
+  "Rust TCP Collector" -> "Normalized JSONL File" [label="validated + timestamped"];
+  "Normalized JSONL File" -> "Python Summary";
+
+  "QEMU Guest" [style=dashed];
+  "C++ Target" [style=dashed];
+  "QEMU Guest" -> "Rust TCP Collector" [style=dashed, label="planned connection"];
+  "C++ Target" -> "Rust TCP Collector" [style=dashed, label="role not defined"];
+}
